@@ -1,6 +1,6 @@
 #include <cstdint>
 #include <array>
-
+#include <varargs.h>
 using namespace std;
 
 // s = A cos(wt)
@@ -29,26 +29,36 @@ enum exception {
 	MORE_VARIABLES //più incognite
 };
 
-auto find0(arr a){
+auto find0(arr a, variabili c...){
 	int b=0;
-	for (auto& i : a) {
-		if (i == 0) ++b;
+	int i;
+	va_list args;
+	va_start(args, c);
+		for (i = 0; i < a.size(); i++) {
+		if (a[i] == 0) ++b;
 	}
 	if (b == 0) throw NO_VARIABLE;
 	else if (b > 1) throw MORE_VARIABLES;
-	return 
+	return i;
 }
 
 auto spazio(arr a) {
 	int index;
 	try {
-		index = find0(a);
+		index = find0(a, SPAZIO, AMPIEZZA, PULSAZIONE, TEMPO);
 	}
 	catch (int e) {
 		throw e;
 	}
 	switch (index) {
-
+	case SPAZIO:
+		break;
+	case AMPIEZZA:
+		break;
+	case PULSAZIONE:
+		break;
+	case TEMPO:
+		break;
 	}
 }
 int main (){
