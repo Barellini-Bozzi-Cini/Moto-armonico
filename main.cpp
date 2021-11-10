@@ -1,6 +1,5 @@
 #include <cstdint>
 #include <array>
-#include <exception>
 
 using namespace std;
 
@@ -16,7 +15,7 @@ constexpr int lenght = 7; //numero di variabili int64_t
 using arr = std::array<bool, lenght>;
 
 enum variabili{
-	SPAZIO,
+	SPAZIO=0,
 	ACEELERAZIONE,
 	PULSAZIONE,
 	FREQUENZA,
@@ -25,19 +24,33 @@ enum variabili{
 	VELOCITA
 };
 
-using error = std::exception;
+enum exception {
+	NO_VARIABLE=0, //nessuna incognita
+	MORE_VARIABLES //più incognite
+};
 
 auto find0(arr a){
+	int b=0;
 	for (auto& i : a) {
-		if (i == 0) return i;
+		if (i == 0) ++b;
 	}
-	throw "Nessuna variabile da calcolare";
+	if (b == 0) throw NO_VARIABLE;
+	else if (b > 1) throw MORE_VARIABLES;
+	return 
 }
 
 auto spazio(arr a) {
+	int index;
+	try {
+		index = find0(a);
+	}
+	catch (int e) {
+		throw e;
+	}
+	switch (index) {
 
+	}
 }
-
 int main (){
 int64_t spazio, accelerazione, pulsazione, frequenza, tempo, ampiezza, velocità; 
 //input da ui di Android?
