@@ -5,7 +5,7 @@ int main (){
 int scelta;
 
 cout<<"Scegli un'opzione:"
-<<"aggiungere varie opzioni"<<
+<<"aggiungere varie opzioni"
 <<endl;
 
 
