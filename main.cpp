@@ -1,7 +1,16 @@
 #include <cstdint>
+#include <cmath>
 #include <array>
 #include <list>
 #include <varargs.h>
+
+#ifndef NDEBUG // definito in cmake di default
+#define DEBUG
+#endif
+
+#ifdef DEBUG
+#include <iostream>
+#endif
 
 using namespace std;
 
@@ -11,10 +20,24 @@ using namespace std;
 // T = 1/f
 // w = 2pigreco/T
 
+class out {
+public:
+	template <typename t> void operator <<(t output) { //stampare o su console o con Android
+#ifdef ANDROID
+
+#elif defined(DEBUG)
+	cout << output;
+#else
+#error la funzione out non è definita
+#endif
+	}
+}out;
+
 constexpr double pi = 3.141592654;
 constexpr int lenght = 7; //numero di variabili int64_t
 
-using arr = std::array<bool, lenght>;
+using barr = std::array<bool, lenght>;
+using iarr = std::array<int64_t, lenght>;
 
 enum variabili{
 	SPAZIO=0,
@@ -28,16 +51,17 @@ enum variabili{
 
 enum exception {
 	NO_VARIABLE=0, //nessuna incognita
-	MORE_VARIABLES //più incognite
+	MORE_VARIABLES, //più incognite
+	UNRECOGNIZED //errore non gestito
 };
 
-auto find0(arr a, int lenght, variabili c...){
+auto find0(barr a, int lenght, variabili c...){
 	int b = 0;
 	int i;
 	va_list args;
 	va_start(args, c);
 	for (i = 0; i < lenght; i++) {
-		if (a[va_arg(args, variabili)] == 0) ++b;
+		if (a[va_arg(args, variabili)] == false) ++b;
 	}
 	if (b == 0) throw NO_VARIABLE;
 	else if (b > 1) throw MORE_VARIABLES;
@@ -45,49 +69,158 @@ auto find0(arr a, int lenght, variabili c...){
 }
 
 namespace funzione {
-	auto spazio(arr a) {
+	auto spazio(iarr a, barr b) {
 		int index;
 		try {
-			index = find0(a, 4, SPAZIO, AMPIEZZA, PULSAZIONE, TEMPO);
+			index = find0(b, 4, SPAZIO, AMPIEZZA, PULSAZIONE, TEMPO);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
 		case SPAZIO: //trovare spazio
+			return a[AMPIEZZA] * cos(a[PULSAZIONE] * a[TEMPO]);
 			break;
 		case AMPIEZZA: //trovare ampiezza
+			return a[SPAZIO]/ cos(a[PULSAZIONE] * a[TEMPO]);
 			break;
 		case PULSAZIONE: //trovare pulsazione
+			return acos(a[SPAZIO] / a[AMPIEZZA]) / a[TEMPO];
 			break;
 		case TEMPO: //trovare tempo
+			acos(a[SPAZIO] / a[AMPIEZZA]) / a[PULSAZIONE];
 			break;
+		default: throw UNRECOGNIZED;
+		}
+	}
+	auto velocità(iarr a, barr b) {
+		int index;
+		try {
+			index = find0(b);
+		}
+		catch (int e) {
+			throw e;
+		}
+		switch (index) {
+		case : //trovare spazio
+			return ;
+			break;
+		case : //trovare ampiezza
+			return ;
+			break;
+		case : //trovare pulsazione
+			return ;
+			break;
+		case : //trovare tempo
+			return ;
+			break;
+		default: throw UNRECOGNIZED;
+		}
+	}
+	auto accelerazione(iarr a, barr b) {
+		int index;
+		try {
+			index = find0(b);
+		}
+		catch (int e) {
+			throw e;
+		}
+		switch (index) {
+		case : //trovare spazio
+			return ;
+			break;
+		case : //trovare ampiezza
+			return ;
+			break;
+		case : //trovare pulsazione
+			return ;
+			break;
+		case : //trovare tempo
+			return ;
+			break;
+		default: throw UNRECOGNIZED;
+		}
+	}
+	auto periodo(iarr a, barr b) {
+		int index;
+		try {
+			index = find0(b);
+		}
+		catch (int e) {
+			throw e;
+		}
+		switch (index) {
+		case : //trovare spazio
+			return ;
+			break;
+		case : //trovare ampiezza
+			return ;
+			break;
+		case : //trovare pulsazione
+			return ;
+			break;
+		case : //trovare tempo
+			return ;
+			break;
+		default: throw UNRECOGNIZED;
+		}
+	}
+	auto pulsazione(iarr a, barr b) {
+		int index;
+		try {
+			index = find0(b);
+		}
+		catch (int e) {
+			throw e;
+		}
+		switch (index) {
+		case : //trovare spazio
+			return ;
+			break;
+		case : //trovare ampiezza
+			return ;
+			break;
+		case : //trovare pulsazione
+			return ;
+			break;
+		case : //trovare tempo
+			return ;
+			break;
+		default: throw UNRECOGNIZED;
 		}
 	}
 }
 
-inline void calcAfter(void (*a)(arr b), arr b) {
+template <typename t> void calcAfter(t (*a)(iarr b, barr c)) { // se non ci sono abbastanza dati per calcolare allora si salva un puntatore dell'equazione in una lista e si spera che i dati siano calcolati da altre equazioni
 	extern list<void*> recalc;
+	extern barr varInserita;
 	try {
-		a(b);
+		a(varInserita);
 	}
 	catch (int e) {
 		if (e == MORE_VARIABLES) {
 			recalc.push_front(&a);
 		}
+		else if (e == UNRECOGNIZED) {
+			out << "\nErrore non riconosciuto!\n";
+		}
 	}
 }
 
 int main (){
-int64_t spazio, accelerazione, pulsazione, frequenza, tempo, ampiezza, velocità; 
+iarr dati; 
 //input da ui di Android?
-arr varInserita = { 0 }; 
-//array che ricorda se un valore è inserito da utente o meno
+barr varInserita = { 0 };
+//barray che ricorda se un valore è inserito da utente o meno
 list<void*> recalc;
-calcAfter(&funzione::spazio, varInserita);
-calcAfter(&funzione::spazio, varInserita);
-calcAfter(&funzione::spazio, varInserita);
-calcAfter(&funzione::spazio, varInserita);
-calcAfter(&funzione::spazio, varInserita);
+
+calcAfter(&funzione::spazio);
+calcAfter(&funzione::velocità);
+calcAfter(&funzione::accelerazione);
+calcAfter(&funzione::periodo);
+calcAfter(&funzione::pulsazione);
+ 
+//TODO Calcolo di funzioni in recalc
+
 return 0;
 }
