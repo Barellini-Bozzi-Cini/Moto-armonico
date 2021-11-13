@@ -1,8 +1,13 @@
+#pragma once
+
 #include <cmath>
+#include <list>
 #include <array>
 #include <varargs.h>
 
-constexpr double pi = 3.141592654;
+#include "io.cpp"
+
+constexpr double pi = 3.141592653589793238;
 
 enum variabili : unsigned char {
 	POSIZIONE = 0,
@@ -17,10 +22,10 @@ enum variabili : unsigned char {
 	VELOCITA
 };
 
-constexpr int lenght = VELOCITA; //numero di variabili int64_t
-
 using barr = std::array<bool, lenght>;
 using iarr = std::array<int64_t, lenght>;
+
+constexpr int lenght = VELOCITA; //numero di variabili int64_t
 
 enum exceptions : unsigned char {
 	NO_VARIABLE = 0, //nessuna incognita
@@ -52,8 +57,7 @@ namespace funzione {
 // a_max = Aw^2 inoltre cos(wt) = -1 => wt = 180 = 2pi
 // v_max = Aw	inoltre sin(wt) = -1 => wt = 270 = -30 = -pi/6
 
-	auto posizione(iarr a, barr b) {
-		int index;
+	auto posizione(iarr a, barr b, int index) {
 		try {
 			index = find0(b, 4, POSIZIONE, AMPIEZZA, PULSAZIONE, TEMPO);
 		}
@@ -76,8 +80,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto velocit‡(iarr a, barr b) {
-		int index;
+	auto velocit‡(iarr a, barr b, int index) {
 		try {
 			index = find0(b, 4, VELOCITA, AMPIEZZA, PULSAZIONE, TEMPO);
 		}
@@ -97,8 +100,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto accelerazione(iarr a, barr b) {
-		int index;
+	auto accelerazione(iarr a, barr b, int index) {
 		try {
 			index = find0(b, 3, POSIZIONE, ACCELERAZIONE, PULSAZIONE);
 		}
@@ -118,8 +120,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto pulsazione(iarr a, barr b) {
-		int index;
+	auto pulsazione(iarr a, barr b, int index) {
 		try {
 			index = find0(b, 1, PULSAZIONE, PERIODO);
 		}
@@ -136,8 +137,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto periodo(iarr a, barr b) {
-		int index;
+	auto periodo(iarr a, barr b, int index) {
 		try {
 			index = find0(b, 2, PERIODO, FREQUENZA);
 		}
@@ -154,8 +154,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto velocit‡MAx(iarr a, barr b) {
-		int index;
+	auto velocit‡MAx(iarr a, barr b, int index) {
 		try {
 			index = find0(b);
 		}
@@ -172,8 +171,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto accelerazioneMAx(iarr a, barr b) {
-		int index;
+	auto accelerazioneMAx(iarr a, barr b, int index) {
 		try {
 			index = find0(b);
 		}
@@ -192,16 +190,54 @@ namespace funzione {
 	}
 }
 
-template <typename t> void calcAfter(t(*a), barr b, list<void*> recalc) { // se non ci sono abbastanza dati per calcolare allora si salva un puntatore dell'equazione in una lista e si spera che i dati siano calcolati da altre equazioni
+template <typename t> void calcAfter(t a, iarr b, barr c, std::list<t> recalc) { // se non ci sono abbastanza dati per calcolare allora si salva un puntatore dell'equazione in una lista e si spera che i dati siano calcolati da altre equazioni
+	int index;
+	double result;
 	try {
-		a(b);
+		result = (*a)(b, c, index);
 	}
 	catch (int e) {
 		if (e == MORE_VARIABLES) {
-			recalc.push_front(&ab;
+			recalc.push_front(a);
 		}
 		else if (e == UNRECOGNIZED) {
-			out << "\nErrore non riconosciuto!\n";
+			out << "\nNon in grado di trovare variabili inserite da utete o meno\n";
+			return;
 		}
 	}
+	switch (index) {
+	case POSIZIONE: 
+		out << "posizione: ";
+		break;
+	case ACCELERAZIONE:
+		out << "accelerazione: ";
+		break;
+	case PULSAZIONE:
+		out << "pulsazione: ";
+		break;
+	case FREQUENZA:
+		out << "frequenza: ";
+		break;
+	case TEMPO:
+		out << "tempo: ";
+		break;
+	case AMPIEZZA:
+		out << "ampiezza: ";
+		break;
+	case VELOCITA_MAX:
+		out << "velocit‡ massima: ";
+		break;
+	case ACCELERAZIONE_MAX:
+		out << "accelerazione massima: ";
+		break;
+	case PERIODO:
+		out << "periodo: ";
+		break;
+	case VELOCITA:
+		out << "velocit‡: ";
+		break;
+	default: out << "Errore nello switch di calcAfter";
+		break;
+	}
+	out << result;
 }
