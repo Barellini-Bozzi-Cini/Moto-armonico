@@ -1,16 +1,17 @@
 #pragma once
 
+#include <type_traits>
 #ifndef NDEBUG
 #include <iostream>
 #endif
 
-class out {
+class Out {
 public:
-	template <typename t> auto& operator <<(t output) { //stampare o su console o su Android
+	template <typename t> inline auto& operator <<(t output) { //stampare o su console o su Android
 #ifdef ANDROID
 
 #elif !defined(NDEBUG)
-			std::cout << i;
+			std::cout << output;
 #else
 #error la funzione out << non è definita
 #endif
@@ -18,9 +19,9 @@ public:
 	}
 }out;
 
-class in {
+class In {
 public:
-	template <typename t> auto& operator >>(t input) { //input o da console o da Android
+	template <typename t> inline auto& operator >>(t input) { //input o da console o da Android
 #ifdef ANDROID
 
 #elif !defined(NDEBUG)

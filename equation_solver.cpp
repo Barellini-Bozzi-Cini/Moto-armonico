@@ -1,11 +1,11 @@
 #pragma once
 
+#include "io.cpp"
+
 #include <cmath>
 #include <list>
 #include <array>
 #include <varargs.h>
-
-#include "io.cpp"
 
 constexpr double pi = 3.141592653589793238;
 
@@ -22,176 +22,175 @@ enum variabili : unsigned char {
 	VELOCITA
 };
 
-constexpr int lenght = VELOCITA; //numero di variabili
+constexpr int lenght = variabili::VELOCITA; //numero di variabili
 
 using barr = std::array<bool, lenght>;
 using arr = std::array<double, lenght>;
 
-enum exceptions : unsigned char {
+enum eccezioni : unsigned char {
 	NO_VARIABLE = 0, //nessuna incognita
 	MORE_VARIABLES, //più incognite
 	UNRECOGNIZED //errore non gestito
 };
 
-auto find0(barr a, int lenght, variabili c...) {
-	int b = 0;
-	int i;
-	va_list args;
-	va_start(args, c);
-	for (i = 0; i < lenght; i++) {
-		if (a[va_arg(args, variabili)] == false) ++b;
-	}
-	if (b == 0) throw NO_VARIABLE;
-	else if (b > 1) throw MORE_VARIABLES;
-	a[i] = true;
-	return i;
-}
-
-namespace funzione {
+namespace formula {
 
 // x = A cos(wt)
 // v = -Aw sin(wt)
 // a = -Aw^2 cos(wt) = -xw^2
 // w = 2pigreco/T
 // T = 1/f
-// a_max = Aw^2 inoltre cos(wt) = -1 => wt = 180 = 2pi
-// v_max = Aw	inoltre sin(wt) = -1 => wt = 270 = -30 = -pi/6
+// a_max = Aw^2 => cos(wt) = -1 => wt = 180 = 2pi
+// v_max = Aw	=> sin(wt) = -1 => wt = 270 = -30 = -pi/6
 
+	auto find0 (barr a, int lenght, variabili c...) {
+		int b = 0;
+		int i;
+		va_list args;
+		va_start(args, c);
+		for (i = 0; i < lenght; i++) {
+			if (a[va_arg(args, variabili)] == false) ++b;
+		}
+		if (b == 0) throw eccezioni::NO_VARIABLE;
+		else if (b > 1) throw eccezioni::MORE_VARIABLES;
+		a[i] = true;
+		return i;
+	}
 	auto posizione(arr a, barr b, int index) {
 		try {
-			index = find0(b, 4, POSIZIONE, AMPIEZZA, PULSAZIONE, TEMPO);
+			index = find0(b, 4, variabili::POSIZIONE, variabili::AMPIEZZA, variabili::PULSAZIONE, variabili::TEMPO);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case POSIZIONE: //trovare spazio
-			return a[AMPIEZZA] * cos(a[PULSAZIONE] * a[TEMPO]);
+		case variabili::POSIZIONE: //trovare spazio
+			return a[variabili::AMPIEZZA] * cos(a[variabili::PULSAZIONE] * a[variabili::TEMPO]);
 			break;
-		case AMPIEZZA: //trovare ampiezza
-			return a[POSIZIONE] / cos(a[PULSAZIONE] * a[TEMPO]);
+		case variabili::AMPIEZZA: //trovare ampiezza
+			return a[variabili::POSIZIONE] / cos(a[variabili::PULSAZIONE] * a[variabili::TEMPO]);
 			break;
-		case PULSAZIONE: //trovare pulsazione
-			return acos(a[POSIZIONE] / a[AMPIEZZA]) / a[TEMPO];
+		case variabili::PULSAZIONE: //trovare pulsazione
+			return acos(a[variabili::POSIZIONE] / a[variabili::AMPIEZZA]) / a[variabili::TEMPO];
 			break;
-		case TEMPO: //trovare tempo
-			acos(a[POSIZIONE] / a[AMPIEZZA]) / a[PULSAZIONE];
+		case variabili::TEMPO: //trovare tempo
+			return acos(a[variabili::POSIZIONE] / a[variabili::AMPIEZZA]) / a[variabili::PULSAZIONE];
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 	auto velocità(arr a, barr b, int index) {
 		try {
-			index = find0(b, 4, VELOCITA, AMPIEZZA, PULSAZIONE, TEMPO);
+			index = find0(b, 4, variabili::VELOCITA, variabili::AMPIEZZA, variabili::PULSAZIONE, variabili::TEMPO);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case AMPIEZZA: //trovare ampiezza
-			return a[VELOCITA]/(-a[PULSAZIONE]*sin(a[PULSAZIONE]*a[TEMPO]));
+		case variabili::AMPIEZZA: //trovare ampiezza
+			return a[variabili::VELOCITA]/(-a[variabili::PULSAZIONE]*sin(a[variabili::PULSAZIONE]*a[variabili::TEMPO]));
 			break;
-		case PULSAZIONE: //trovare pulsazione
-			throw MORE_VARIABLES; //non so risolvere equazioni con il seno quindi attendo la risoluzione di w=2pi/t
+		case variabili::PULSAZIONE: //trovare pulsazione
+			throw eccezioni::MORE_VARIABLES; //non so risolvere equazioni con il seno quindi attendo la risoluzione di w=2pi/t
 			break;
-		case TEMPO: //trovare tempo
-			return asin(a[VELOCITA]/(-a[AMPIEZZA]*a[PULSAZIONE]))/a[PULSAZIONE];
+		case variabili::TEMPO: //trovare tempo
+			return asin(a[variabili::VELOCITA]/(-a[variabili::AMPIEZZA]*a[variabili::PULSAZIONE]))/a[variabili::PULSAZIONE];
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 	auto accelerazione(arr a, barr b, int index) {
 		try {
-			index = find0(b, 3, POSIZIONE, ACCELERAZIONE, PULSAZIONE);
+			index = find0(b, 3, variabili::POSIZIONE, variabili::ACCELERAZIONE, variabili::PULSAZIONE);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case POSIZIONE: //trovare spazio
+		case variabili::POSIZIONE: //trovare spazio
 			return a[ACCELERAZIONE] / -pow(a[PULSAZIONE], 2);
 			break;
-		case ACCELERAZIONE: //trovare accelerazione
+		case variabili::ACCELERAZIONE: //trovare accelerazione
 			return -a[POSIZIONE]*pow(a[PULSAZIONE], 2);
 			break;
-		case PULSAZIONE: //trovare pulsazione
-			return sqrt(a[ACCELERAZIONE]/-a[POSIZIONE]);
+		case variabili::PULSAZIONE: //trovare pulsazione
+			return sqrt(a[variabili::ACCELERAZIONE]/-a[variabili::POSIZIONE]);
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 	auto pulsazione(arr a, barr b, int index) {
 		try {
-			index = find0(b, 1, PULSAZIONE, PERIODO);
+			index = find0(b, 1, variabili::PULSAZIONE, variabili::PERIODO);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case PULSAZIONE: //trovare pulsazione
-			return 2*pi/a[PERIODO];
+		case variabili::PULSAZIONE: //trovare pulsazione
+			return 2*pi/a[variabili::PERIODO];
 			break;
-		case PERIODO: //trovare pulsazione
-			return 2*pi/a[PULSAZIONE];
+		case variabili::PERIODO: //trovare pulsazione
+			return 2*pi/a[variabili::PULSAZIONE];
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 	auto periodo(arr a, barr b, int index) {
 		try {
-			index = find0(b, 2, PERIODO, FREQUENZA);
+			index = find0(b, 2, variabili::PERIODO, variabili::FREQUENZA);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case PERIODO: //trovare periodo
-			return 1/a[FREQUENZA];
+		case variabili::PERIODO: //trovare periodo
+			return 1/a[variabili::FREQUENZA];
 			break;
-		case FREQUENZA: //trovare frequenza
-			return 1/a[PERIODO];
+		case variabili::FREQUENZA: //trovare frequenza
+			return 1/a[variabili::PERIODO];
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 	auto velocitàMax(arr a, barr b, int index) {
 		try {
-			index = find0(b, 2, AMPIEZZA, PULSAZIONE, VELOCITA_MAX);
+			index = find0(b, 2, variabili::AMPIEZZA, variabili::PULSAZIONE, variabili::VELOCITA_MAX);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case VELOCITA_MAX: //trovare velocità max
-			return a[AMPIEZZA]*a[PULSAZIONE];
+		case variabili::VELOCITA_MAX: //trovare velocità max
+			return a[variabili::AMPIEZZA]*a[variabili::PULSAZIONE];
 			break;
-		case AMPIEZZA: //trovare ampiezza
-			return a[VELOCITA_MAX]/a[PULSAZIONE];
+		case variabili::AMPIEZZA: //trovare ampiezza
+			return a[variabili::VELOCITA_MAX]/a[variabili::PULSAZIONE];
 			break;
-		case PULSAZIONE: //trovare pulsazione
-			return a[VELOCITA_MAX] / a[AMPIEZZA];
+		case variabili::PULSAZIONE: //trovare pulsazione
+			return a[variabili::VELOCITA_MAX] / a[variabili::AMPIEZZA];
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 	auto accelerazioneMax(arr a, barr b, int index) {
 		try {
-			index = find0(b, AMPIEZZA, PULSAZIONE, ACCELERAZIONE_MAX);
+			index = find0(b, variabili::AMPIEZZA, variabili::PULSAZIONE, variabili::ACCELERAZIONE_MAX);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case AMPIEZZA: //trovare ampiezza
-			return a[ACCELERAZIONE_MAX]/pow(a[PULSAZIONE],2);
+		case variabili::AMPIEZZA: //trovare ampiezza
+			return a[variabili::ACCELERAZIONE_MAX]/pow(a[variabili::PULSAZIONE],2);
 			break;
-		case PULSAZIONE: //trovare pulsazione
-			return sqrt(a[ACCELERAZIONE_MAX] / a[AMPIEZZA]);
+		case variabili::PULSAZIONE: //trovare pulsazione
+			return sqrt(a[variabili::ACCELERAZIONE_MAX] / a[variabili::AMPIEZZA]);
 			break;
-		case ACCELERAZIONE_MAX: //trovare accelerazione max
-			return a[AMPIEZZA]*pow(a[PULSAZIONE], 2);
+		case variabili::ACCELERAZIONE_MAX: //trovare accelerazione max
+			return a[variabili::AMPIEZZA]*pow(a[variabili::PULSAZIONE], 2);
 			break;
-		default: throw UNRECOGNIZED;
+		default: throw eccezioni::UNRECOGNIZED;
 		}
 	}
 }
@@ -199,47 +198,48 @@ namespace funzione {
 template <typename t> void calcAfter(t a, arr b, barr c, std::list<t> recalc) { // se non ci sono abbastanza dati per calcolare allora si salva un puntatore dell'equazione in una lista e si spera che i dati siano calcolati da altre equazioni
 	int index;
 	double result;
+
 	try {
 		result = (*a)(b, c, index);
 	}
 	catch (int e) {
-		if (e == MORE_VARIABLES) {
+		if (e == eccezioni::MORE_VARIABLES) {
 			recalc.push_front(a);
 		}
-		else if (e == UNRECOGNIZED) {
+		else if (e == eccezioni::UNRECOGNIZED) {
 			out << "\nNon in grado di trovare variabili inserite da utete o meno\n";
 			return;
 		}
 	}
 	switch (index) {
-	case POSIZIONE: 
+	case variabili::POSIZIONE:
 		out << "posizione: ";
 		break;
-	case ACCELERAZIONE:
+	case variabili::ACCELERAZIONE:
 		out << "accelerazione: ";
 		break;
-	case PULSAZIONE:
+	case variabili::PULSAZIONE:
 		out << "pulsazione: ";
 		break;
-	case FREQUENZA:
+	case variabili::FREQUENZA:
 		out << "frequenza: ";
 		break;
-	case TEMPO:
+	case variabili::TEMPO:
 		out << "tempo: ";
 		break;
-	case AMPIEZZA:
+	case variabili::AMPIEZZA:
 		out << "ampiezza: ";
 		break;
-	case VELOCITA_MAX:
+	case variabili::VELOCITA_MAX:
 		out << "velocità massima: ";
 		break;
-	case ACCELERAZIONE_MAX:
+	case variabili::ACCELERAZIONE_MAX:
 		out << "accelerazione massima: ";
 		break;
-	case PERIODO:
+	case variabili::PERIODO:
 		out << "periodo: ";
 		break;
-	case VELOCITA:
+	case variabili::VELOCITA:
 		out << "velocità: ";
 		break;
 	default: out << "Errore nello switch di calcAfter";
