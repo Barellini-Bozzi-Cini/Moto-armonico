@@ -1,12 +1,14 @@
 #include <cmath>
 #include "equation_solver.cpp"
+
+double A, t, w, a, T, f, v, x, vMax, aMax;
 auto posizione() {
 	return A * cos(w * t);
 	return a / -pow(w, 2);
 }
 auto tempo() {
 	return acos(x / a) / w;
-	return asin(v/(-A*w))/w
+	return asin(v / (-A * w)) / w;
 }
 auto accelerazione() {
 	return -A * pow(w, 2) * cos(w * t);
@@ -27,10 +29,19 @@ auto accelerazioneMax() {
 }
 auto pulsazione() {
 	return acos(x / A) / t;
+	return asin(v / (-A * w)) / t;
+	return acos(a / (-A * pow(w, 2))) / t;
+	return sqrt(a / -x);
+	return sqrt(aMax / A);
+	return vMax / A;
 }
 auto frequenza() {
-	out <<
+	return 1 / T;
 }
 auto ampiezza() {
-	out <<
+	return x / cos(w*t);
+	return -v / (w * sin(w * t));
+	return -a / (pow(w, 2) * cos(w * t));
+	return aMax / pow(w, 2);
+	return vMax / w;
 }
