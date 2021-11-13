@@ -33,8 +33,8 @@ calcAfter(&funzione::velocit‡, dati, varInserita, reCalc);
 calcAfter(&funzione::accelerazione, dati, varInserita, reCalc);
 calcAfter(&funzione::pulsazione, dati, varInserita, reCalc);
 calcAfter(&funzione::periodo, dati, varInserita, reCalc);
-calcAfter(&funzione::velocit‡MAx, dati, varInserita, reCalc);
-calcAfter(&funzione::accelerazioneMAx, dati, varInserita, reCalc);
+calcAfter(&funzione::velocit‡Max, dati, varInserita, reCalc);
+calcAfter(&funzione::accelerazioneMax, dati, varInserita, reCalc);
 
 for (;reCalc.size()!=0;) {
 	for (auto& i : reCalc) {

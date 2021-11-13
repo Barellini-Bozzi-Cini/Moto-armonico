@@ -154,7 +154,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto velocit‡MAx(arr a, barr b, int index) {
+	auto velocit‡Max(arr a, barr b, int index) {
 		try {
 			index = find0(b, 2, AMPIEZZA, PULSAZIONE, VELOCITA_MAX);
 		}
@@ -174,7 +174,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto accelerazioneMAx(arr a, barr b, int index) {
+	auto accelerazioneMax(arr a, barr b, int index) {
 		try {
 			index = find0(b, AMPIEZZA, PULSAZIONE, ACCELERAZIONE_MAX);
 		}
