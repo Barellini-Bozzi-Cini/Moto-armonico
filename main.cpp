@@ -2,9 +2,9 @@
 #include "equation_solver.cpp"
 
 int main (){
-iarr dati;
+arr dati;
 barr varInserita = { 0 }; //bool array che ricorda se un valore è inserito da utente o meno
-std::list<double(*)(iarr, barr, int)> reCalc;
+std::list<double(*)(arr, barr, int)> reCalc;
 
 #ifndef NDEBUG
 uint8_t cmd;

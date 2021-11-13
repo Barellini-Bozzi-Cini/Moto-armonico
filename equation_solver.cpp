@@ -22,10 +22,10 @@ enum variabili : unsigned char {
 	VELOCITA
 };
 
-using barr = std::array<bool, lenght>;
-using iarr = std::array<int64_t, lenght>;
+constexpr int lenght = VELOCITA; //numero di variabili
 
-constexpr int lenght = VELOCITA; //numero di variabili int64_t
+using barr = std::array<bool, lenght>;
+using arr = std::array<double, lenght>;
 
 enum exceptions : unsigned char {
 	NO_VARIABLE = 0, //nessuna incognita
@@ -57,7 +57,7 @@ namespace funzione {
 // a_max = Aw^2 inoltre cos(wt) = -1 => wt = 180 = 2pi
 // v_max = Aw	inoltre sin(wt) = -1 => wt = 270 = -30 = -pi/6
 
-	auto posizione(iarr a, barr b, int index) {
+	auto posizione(arr a, barr b, int index) {
 		try {
 			index = find0(b, 4, POSIZIONE, AMPIEZZA, PULSAZIONE, TEMPO);
 		}
@@ -80,7 +80,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto velocit‡(iarr a, barr b, int index) {
+	auto velocit‡(arr a, barr b, int index) {
 		try {
 			index = find0(b, 4, VELOCITA, AMPIEZZA, PULSAZIONE, TEMPO);
 		}
@@ -100,7 +100,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto accelerazione(iarr a, barr b, int index) {
+	auto accelerazione(arr a, barr b, int index) {
 		try {
 			index = find0(b, 3, POSIZIONE, ACCELERAZIONE, PULSAZIONE);
 		}
@@ -120,7 +120,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto pulsazione(iarr a, barr b, int index) {
+	auto pulsazione(arr a, barr b, int index) {
 		try {
 			index = find0(b, 1, PULSAZIONE, PERIODO);
 		}
@@ -137,7 +137,7 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto periodo(iarr a, barr b, int index) {
+	auto periodo(arr a, barr b, int index) {
 		try {
 			index = find0(b, 2, PERIODO, FREQUENZA);
 		}
@@ -154,43 +154,49 @@ namespace funzione {
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto velocit‡MAx(iarr a, barr b, int index) {
+	auto velocit‡MAx(arr a, barr b, int index) {
 		try {
-			index = find0(b);
+			index = find0(b, 2, AMPIEZZA, PULSAZIONE, VELOCITA_MAX);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case : //trovare periodo
-			return ;
+		case VELOCITA_MAX: //trovare velocit‡ max
+			return a[AMPIEZZA]*a[PULSAZIONE];
 			break;
-		case : //trovare frequenza
-			return ;
+		case AMPIEZZA: //trovare ampiezza
+			return a[VELOCITA_MAX]/a[PULSAZIONE];
+			break;
+		case PULSAZIONE: //trovare pulsazione
+			return a[VELOCITA_MAX] / a[AMPIEZZA];
 			break;
 		default: throw UNRECOGNIZED;
 		}
 	}
-	auto accelerazioneMAx(iarr a, barr b, int index) {
+	auto accelerazioneMAx(arr a, barr b, int index) {
 		try {
-			index = find0(b);
+			index = find0(b, AMPIEZZA, PULSAZIONE, ACCELERAZIONE_MAX);
 		}
 		catch (int e) {
 			throw e;
 		}
 		switch (index) {
-		case : //trovare 
-			return ;
+		case AMPIEZZA: //trovare ampiezza
+			return a[ACCELERAZIONE_MAX]/pow(a[PULSAZIONE],2);
 			break;
-		case : //trovare 
-			return ;
+		case PULSAZIONE: //trovare pulsazione
+			return sqrt(a[ACCELERAZIONE_MAX] / a[AMPIEZZA]);
+			break;
+		case ACCELERAZIONE_MAX: //trovare accelerazione max
+			return a[AMPIEZZA]*pow(a[PULSAZIONE], 2);
 			break;
 		default: throw UNRECOGNIZED;
 		}
 	}
 }
 
-template <typename t> void calcAfter(t a, iarr b, barr c, std::list<t> recalc) { // se non ci sono abbastanza dati per calcolare allora si salva un puntatore dell'equazione in una lista e si spera che i dati siano calcolati da altre equazioni
+template <typename t> void calcAfter(t a, arr b, barr c, std::list<t> recalc) { // se non ci sono abbastanza dati per calcolare allora si salva un puntatore dell'equazione in una lista e si spera che i dati siano calcolati da altre equazioni
 	int index;
 	double result;
 	try {
