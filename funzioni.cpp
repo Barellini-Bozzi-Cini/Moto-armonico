@@ -4,7 +4,7 @@
 		return a / -pow(w, 2);
 	}
 	auto tempo() {
-		return acos(x / a) / w;
+		return acos(x / A) / w;
 		return asin(v / (-A * w)) / w;
 	}
 	auto accelerazione() {
