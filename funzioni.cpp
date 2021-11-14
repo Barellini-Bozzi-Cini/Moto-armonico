@@ -13,12 +13,12 @@
 	}
 	auto periodo() {
 		return 1 / f;
-		return 2 * pi / T;
+		return 2 * pi / w;
 	}
-	auto velocit‡() {
+	auto velocit√†() {
 		return -A * w * sin(w * t);
 	}
-	auto velocit‡Max() {
+	auto velocit√†Max() {
 		return A * w;
 	}
 	auto accelerazioneMax() {
