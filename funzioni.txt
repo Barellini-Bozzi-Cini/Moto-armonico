@@ -24,7 +24,6 @@ accelerazioneMax:
 
 pulsazione:
 		acos(x / A) / t
-		asin(v / (-A * w)) / t
 		sqrt(a / -x)
 		sqrt(aMax / A)
 		vMax / A
