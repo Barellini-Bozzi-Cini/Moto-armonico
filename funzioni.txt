@@ -1,0 +1,39 @@
+posizione:
+		A * cos(w * t)
+		a / -pow(w, 2)
+tempo:
+	acos(x / A) / w
+	asin(v / (-A * w)) / w
+
+accelerazione:
+	-A * pow(w, 2) * cos(w * t)
+	-x * pow(w, 2)
+
+periodo:
+		return 1 / f
+		return 2 * pi / w
+
+velocità:
+		-A * w * sin(w * t)
+
+velocitàMax:
+		return A * w
+
+accelerazioneMax:
+		A * pow(w, 2)
+
+pulsazione:
+		acos(x / A) / t
+		asin(v / (-A * w)) / t
+		sqrt(a / -x)
+		sqrt(aMax / A)
+		vMax / A
+frequenza:
+		1 / T
+
+ampiezza:
+		x / cos(w * t)
+		-v / (w * sin(w * t))
+		-a / (pow(w, 2) * cos(w * t))
+		aMax / pow(w, 2)
+		vMax / w
