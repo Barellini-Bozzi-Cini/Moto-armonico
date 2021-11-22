@@ -2,22 +2,22 @@ posizione:
 		A * cos(w * t)
 		a / -pow(w, 2)
 tempo:
-	acos(x / A) / w
-	asin(v / (-A * w)) / w
+		acos(x / A) / w
+		asin(v / (-A * w)) / w
 
 accelerazione:
-	-A * pow(w, 2) * cos(w * t)
-	-x * pow(w, 2)
+		-A * pow(w, 2) * cos(w * t)
+		-x * pow(w, 2)
 
 periodo:
-		return 1 / f
-		return 2 * pi / w
+		1 / f
+		2 * pi / w
 
 velocità:
 		-A * w * sin(w * t)
 
 velocitàMax:
-		return A * w
+		A * w
 
 accelerazioneMax:
 		A * pow(w, 2)
